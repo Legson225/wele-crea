@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --font-syne: 'Syne', sans-serif;
+  --font-jakarta: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --gold: #F5A623;
+  --gold-light: #FFCD6B;
+  --cyan: #00D4FF;
+  --emerald: #00E5A0;
+  --pink: #FF6B9D;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-jakarta);
+  background: #070B16;
+  color: #F0F4FF;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Gradient text utility */
+.gradient-gold {
+  background: linear-gradient(135deg, #F5A623 0%, #FFCD6B 50%, #00D4FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card */
+.glass {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(12px);
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Grid background pattern */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(245,166,35,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,166,35,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0C1120; }
+::-webkit-scrollbar-thumb { background: rgba(245,166,35,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(245,166,35,0.5); }
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  33%  { transform: translate(10px, -15px); }
+  66%  { transform: translate(-8px, 10px); }
+}
+@keyframes scrollLine {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
+}
+.animate-float { animation: float 8s ease-in-out infinite; }
+.animate-scroll-line { animation: scrollLine 2s ease-in-out infinite; }
+.animate-pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
+
+/* Agent card hover line */
+.agent-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent, #F5A623), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.agent-card:hover::before { opacity: 1; }
+
+/* Table */
+.wc-table { width: 100%; border-collapse: collapse; }
+.wc-table th {
+  font-size: 11px; font-weight: 700; color: #4A5568;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
+  text-align: left;
+}
+.wc-table td {
+  padding: 14px 16px; font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.wc-table tbody tr:last-child td { border-bottom: none; }
+.wc-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
