@@ -1,287 +1,272 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { AGENTS, PLANS, GDL } from '@/lib/constants'
 
-function PulsingDot({ color = '#00E5A0' }: { color?: string }) {
-  return <span className="w-1.5 h-1.5 rounded-full animate-pulse-dot" style={{ background: color, display: 'inline-block' }} />
+const S = {
+  section: (bg='#FAFAF8') => ({padding:'96px 0',background:bg} as React.CSSProperties),
+  container: {maxWidth:1280,margin:'0 auto',padding:'0 32px'} as React.CSSProperties,
+  h2: {fontFamily:'Syne,sans-serif',fontSize:'clamp(32px,5vw,52px)',fontWeight:800,letterSpacing:'-.03em',marginBottom:16,color:'#1A1035'} as React.CSSProperties,
+  grad: {background:'linear-gradient(135deg,#7C3AED 0%,#EC4899 50%,#F97316 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'} as React.CSSProperties,
+}
+
+function PulsingDot({color='#10B981'}:{color?:string}) {
+  return <span style={{width:6,height:6,borderRadius:'50%',background:color,display:'inline-block'}} className="animate-pulse-dot"/>
 }
 
 export default function LandingPage() {
   const router = useRouter()
   const [idea, setIdea] = useState('')
   const [copied, setCopied] = useState(false)
-  const revealRef = useRef<HTMLDivElement[]>([])
 
-  // Scroll reveal
   useEffect(() => {
     const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible')
-          obs.unobserve(e.target)
-        }
-      })
-    }, { threshold: 0.1 })
+      entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)} })
+    },{threshold:0.1})
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
     return () => obs.disconnect()
-  }, [])
+  },[])
 
   function handleGenerate() {
-    if (!idea.trim()) return
-    router.push('/signup?idea=' + encodeURIComponent(idea))
+    if(!idea.trim()) return
+    router.push('/signup?idea='+encodeURIComponent(idea))
   }
-
   function handleCopy() {
     navigator.clipboard.writeText(GDL.wallet)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setCopied(true); setTimeout(()=>setCopied(false),2000)
   }
 
+  const agentColors = ['#7C3AED','#3B82F6','#10B981','#F59E0B','#EF4444','#06B6D4','#EC4899','#8B5CF6','#F97316','#06B6D4']
+  const agentBg = ['#F5F3FF','#EFF6FF','#ECFDF5','#FFFBEB','#FEF2F2','#ECFEFF','#FDF2F8','#F5F3FF','#FFF7ED','#ECFEFF']
+
   return (
-    <main>
+    <main style={{background:'#FAFAF8'}}>
       <Navbar />
 
-      {/* ── HERO ──────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-28 pb-20 overflow-hidden grid-bg">
-        {/* Orbs */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute w-[600px] h-[600px] rounded-full blur-[100px] opacity-[0.12] bg-[#F5A623] -top-28 -left-32 animate-float" />
-          <div className="absolute w-[500px] h-[500px] rounded-full blur-[100px] opacity-[0.08] bg-[#00D4FF] bottom-0 -right-24" style={{ animationDelay: '-3s' }} />
-          <div className="absolute w-[400px] h-[400px] rounded-full blur-[80px] opacity-[0.06] bg-[#FF6B9D] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ animationDelay: '-5s' }} />
-        </div>
+      {/* ── HERO ──────────────────────────────────────────────────────── */}
+      <section style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'110px 32px 80px',position:'relative',overflow:'hidden'}}>
+        {/* Gradient bg */}
+        <div style={{position:'absolute',inset:0,pointerEvents:'none',background:'radial-gradient(ellipse 600px 400px at 20% 30%,rgba(124,58,237,0.08) 0%,transparent 70%),radial-gradient(ellipse 500px 400px at 80% 70%,rgba(236,72,153,0.07) 0%,transparent 70%),radial-gradient(ellipse 400px 300px at 60% 20%,rgba(249,115,22,0.06) 0%,transparent 70%)'}}/>
+        <div className="dot-grid" style={{position:'absolute',inset:0,pointerEvents:'none'}}/>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          {/* Tag */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5A623]/8 border border-[#F5A623]/25 text-[13px] font-semibold text-[#F5A623] mb-8 animate-fadeUp">
-            <PulsingDot />
-            Plateforme SaaS IA — Propulsée par DJOLOG GDL
+        <div style={{maxWidth:860,margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
+          <div className="badge badge-purple animate-fadeUp" style={{marginBottom:28}}>
+            ✨ Transformez vos idées en produits digitaux réels
           </div>
-
-          {/* H1 */}
-          <h1 className="font-syne text-5xl sm:text-6xl lg:text-[82px] font-extrabold leading-[1.04] tracking-tight mb-6 animate-fadeUp" style={{ animationDelay: '0.1s', fontFamily: 'Syne, sans-serif' }}>
-            Votre idée devient un<br />
-            <span className="gradient-gold">produit digital complet</span>
+          <h1 className="animate-fadeUp" style={{fontFamily:'Syne,sans-serif',fontSize:'clamp(44px,7vw,82px)',fontWeight:800,lineHeight:1.06,letterSpacing:'-.03em',marginBottom:22,color:'#1A1035',animationDelay:'.1s'}}>
+            Créez votre <span style={S.grad}>site, app</span><br/>ou logiciel sans coder
           </h1>
-
-          <p className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed mb-10 animate-fadeUp" style={{ animationDelay: '0.2s' }}>
-            WELE CREA transforme n'importe quelle idée en site web, application ou logiciel finalisé grâce à <strong className="text-white">10 Agents IA autonomes</strong>. Zéro code. Résultat professionnel.
+          <p className="animate-fadeUp" style={{fontSize:'clamp(16px,2vw,20px)',color:'#4B4566',maxWidth:600,margin:'0 auto 36px',lineHeight:1.65,animationDelay:'.2s'}}>
+            Décrivez votre idée en français. Nos <strong>10 Agents IA</strong> conçoivent, codent, testent et déploient votre produit complet en quelques minutes.
           </p>
 
           {/* Prompt box */}
-          <div className="max-w-2xl mx-auto mb-4 flex items-center gap-3 p-1.5 pl-5 rounded-2xl bg-white/4 border border-white/10 shadow-[0_0_60px_rgba(245,166,35,0.07),0_20px_40px_rgba(0,0,0,0.4)] animate-fadeUp" style={{ animationDelay: '0.3s' }}>
-            <span className="text-xl">✨</span>
-            <input
-              type="text"
-              value={idea}
-              onChange={e => setIdea(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleGenerate()}
-              placeholder="Décrivez votre idée… ex : une app de gestion RH pour PME africaines"
-              className="flex-1 bg-transparent text-white text-sm placeholder:text-white/30 py-3 focus:outline-none"
-            />
-            <button
-              onClick={handleGenerate}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#F5A623] to-[#E8920A] text-[#070B16] font-bold text-sm hover:shadow-[0_0_20px_rgba(245,166,35,0.35)] hover:-translate-y-0.5 transition-all shrink-0"
-            >
+          <div className="animate-fadeUp" style={{maxWidth:660,margin:'0 auto 14px',display:'flex',alignItems:'center',gap:10,padding:'6px 6px 6px 20px',background:'#fff',borderRadius:18,border:'2px solid rgba(124,58,237,0.2)',boxShadow:'0 8px 40px rgba(124,58,237,0.14)',animationDelay:'.3s'}}>
+            <span style={{fontSize:20}}>🎯</span>
+            <input type="text" value={idea} onChange={e=>setIdea(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleGenerate()}
+              placeholder="Ex: une app de réservation pour un salon de coiffure à Abidjan…"
+              style={{flex:1,border:'none',outline:'none',fontSize:15,fontFamily:'Plus Jakarta Sans,sans-serif',color:'#1A1035',background:'transparent',padding:'10px 0'}}/>
+            <button onClick={handleGenerate}
+              style={{padding:'12px 22px',borderRadius:13,border:'none',background:'linear-gradient(135deg,#7C3AED,#A855F7)',color:'#fff',fontWeight:700,fontSize:14,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',boxShadow:'0 4px 14px rgba(124,58,237,0.35)',whiteSpace:'nowrap'}}>
               ⚡ Générer
             </button>
           </div>
 
-          <p className="text-xs text-white/30 mb-12 animate-fadeUp" style={{ animationDelay: '0.35s' }}>
-            Gratuit pour commencer · Paiements en <span className="px-2 py-0.5 rounded bg-[#F5A623]/10 text-[#F5A623] font-bold border border-[#F5A623]/20">🪙 GDL</span> · Aucune carte bancaire
+          <p className="animate-fadeUp" style={{fontSize:12,color:'#9CA3AF',marginBottom:48,animationDelay:'.35s'}}>
+            Gratuit pour commencer · Paiements en <span style={{padding:'2px 8px',borderRadius:6,background:'rgba(249,115,22,0.1)',color:'#F97316',fontWeight:700,fontSize:11,border:'1px solid rgba(249,115,22,0.25)'}}>🪙 GDL</span> · Aucune carte bancaire
           </p>
 
-          {/* Scroll hint */}
-          <div className="flex flex-col items-center gap-2 text-[11px] text-white/20 tracking-widest uppercase animate-fadeUp" style={{ animationDelay: '0.5s' }}>
-            <span>Découvrir</span>
-            <div className="w-px h-10 bg-gradient-to-b from-[#F5A623] to-transparent animate-scroll-line" />
-          </div>
-        </div>
-      </section>
-
-      {/* ── COMPARAISON ──────────────────────────────── */}
-      <div className="border-y border-white/7 py-5 bg-[#0C1120]">
-        <div className="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-[11px] font-bold text-white/25 uppercase tracking-widest">Comparable aux meilleures plateformes mondiales</span>
-          <div className="flex flex-wrap gap-8">
-            {['Framer AI', 'Webflow AI', 'Builder.io', 'Vercel v0', 'Wix AI', 'Base44'].map(n => (
-              <span key={n} className="text-[13px] font-bold text-white/20 hover:text-white/50 transition-colors cursor-default" style={{ fontFamily: 'Syne' }}>{n}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── AGENTS ───────────────────────────────────── */}
-      <section id="agents" className="py-24 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 reveal">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5A623]/10 border border-[#F5A623]/30 text-xs font-bold text-[#F5A623] uppercase tracking-widest mb-5">
-              ✦ 10 Agents IA Spécialisés
-            </div>
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ fontFamily: 'Syne' }}>
-              Des agents qui <span className="gradient-gold">travaillent pour vous</span>
-            </h2>
-            <p className="text-white/50 max-w-lg mx-auto">Chaque agent est spécialisé, autonome et opère 24h/24. Ensemble, ils couvrent tout le cycle de vie de votre produit.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {AGENTS.map((agent, i) => (
-              <div
-                key={agent.id}
-                className="agent-card relative p-6 rounded-2xl bg-white/3 border border-white/7 hover:border-white/15 hover:-translate-y-1 transition-all duration-300 reveal"
-                style={{ '--accent': agent.color, animationDelay: `${i * 50}ms` } as React.CSSProperties}
-              >
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mb-4" style={{ background: agent.color + '18', border: `1px solid ${agent.color}30` }}>
-                  {agent.icon}
-                </div>
-                <h3 className="text-sm font-bold mb-2" style={{ fontFamily: 'Syne' }}>{agent.name}</h3>
-                <p className="text-xs text-white/40 leading-relaxed">{agent.desc}</p>
-                <div className="inline-flex items-center gap-1.5 mt-4 text-[11px] font-semibold text-[#00E5A0] bg-[#00E5A0]/8 px-2.5 py-1 rounded-md border border-[#00E5A0]/20">
-                  <PulsingDot /> Actif
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FONCTIONNEMENT ──────────────────────────── */}
-      <section id="how" className="py-24 bg-[#0C1120]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 reveal">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5A623]/10 border border-[#F5A623]/30 text-xs font-bold text-[#F5A623] uppercase tracking-widest mb-5">✦ Processus</div>
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ fontFamily: 'Syne' }}>Comment ça <span className="gradient-gold">fonctionne ?</span></h2>
-            <p className="text-white/50">De l'idée au produit live en quelques minutes. Nos agents font tout le travail.</p>
-          </div>
-
-          <div className="flex flex-wrap items-start justify-center gap-0 reveal">
+          {/* Floating chips */}
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,flexWrap:'wrap'}}>
             {[
-              { n: '01', icon: '💡', title: "Décrivez votre idée", desc: "Tapez votre idée en langage naturel. Soyez précis ou vague — nos agents s'adaptent." },
-              { n: '02', icon: '🎨', title: "Choisissez un design", desc: "Le Design Agent propose 3 à 6 variantes de design uniques. Sélectionnez la vôtre." },
-              { n: '03', icon: '⚡', title: "Les agents génèrent", desc: "10 agents travaillent en parallèle : code, tests, sécurité, SEO, documentation." },
-              { n: '04', icon: '🚀', title: "Déployez et lancez", desc: "Téléchargez ou déployez automatiquement sur votre hébergement. C'est live !" },
-            ].map((step, i) => (
-              <div key={i} className="relative flex-1 min-w-[180px] max-w-[260px] text-center px-6 py-8">
-                <span className="block text-[10px] font-bold text-[#F5A623] tracking-widest font-mono mb-4">{step.n}</span>
-                <div className="w-16 h-16 rounded-2xl bg-[#F5A623]/8 border border-[#F5A623]/20 flex items-center justify-center text-2xl mx-auto mb-5 hover:bg-[#F5A623]/15 hover:shadow-[0_0_24px_rgba(245,166,35,0.2)] transition-all">
-                  {step.icon}
-                </div>
-                <h3 className="text-[15px] font-bold mb-2" style={{ fontFamily: 'Syne' }}>{step.title}</h3>
-                <p className="text-[13px] text-white/40 leading-relaxed">{step.desc}</p>
-                {i < 3 && <span className="absolute right-[-16px] top-[80px] text-white/20 text-2xl hidden lg:block">→</span>}
+              {icon:'🎨',label:'Design professionnel',color:'#7C3AED',bg:'#F5F3FF'},
+              {icon:'💻',label:'Code React généré',color:'#3B82F6',bg:'#EFF6FF'},
+              {icon:'🚀',label:'Déployé en 2 min',color:'#10B981',bg:'#ECFDF5'},
+              {icon:'🛡️',label:'Sécurisé 24/7',color:'#F97316',bg:'#FFF7ED'},
+            ].map(c=>(
+              <div key={c.label} className="animate-float" style={{background:c.bg,borderRadius:14,padding:'10px 16px',display:'flex',alignItems:'center',gap:8,fontSize:13,fontWeight:600,color:c.color,border:'1px solid',borderColor:c.color+'25',boxShadow:'0 4px 16px rgba(0,0,0,0.06)'}}>
+                <span style={{fontSize:18}}>{c.icon}</span>{c.label}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PRICING ──────────────────────────────────── */}
-      <section id="pricing" className="py-24 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 reveal">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5A623]/10 border border-[#F5A623]/30 text-xs font-bold text-[#F5A623] uppercase tracking-widest mb-5">✦ Tarification</div>
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ fontFamily: 'Syne' }}>
-              Choisissez votre <span className="gradient-gold">plan</span>
-            </h2>
-            <p className="text-white/50">
-              Paiements exclusivement en <strong className="text-[#F5A623]">🪙 DJOLOG (GDL)</strong> — jeton de l'écosystème DJOLOGBAHA™
-            </p>
+      {/* ── CE QU'ON CREE ──────────────────────────────────────────────── */}
+      <section id="types" style={S.section('#fff')}>
+        <div style={S.container}>
+          <div style={{textAlign:'center',marginBottom:64}} className="reveal">
+            <div className="badge badge-purple" style={{marginBottom:16}}>✦ Ce que vous pouvez créer</div>
+            <h2 style={S.h2}>Trois types de produits,<br/><span style={S.grad}>une seule plateforme</span></h2>
+            <p style={{fontSize:17,color:'#4B4566',maxWidth:520,margin:'0 auto'}}>Que vous ayez besoin d'un site vitrine, d'une application web ou d'un logiciel sur mesure, WELE CREA le crée pour vous.</p>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:20}} className="reveal">
+            {[
+              {emoji:'🌐',title:'Sites Web',desc:'Portfolios, landing pages, blogs, sites e-commerce, vitrines. Design unique, SEO optimisé, mobile-ready.',tags:['Landing page','E-commerce','Portfolio','Blog'],bg:'linear-gradient(160deg,#F5F3FF,#EDE9FE)',color:'#7C3AED',border:'rgba(124,58,237,0.2)',top:'#7C3AED'},
+              {emoji:'⚡',title:'Applications Web',desc:"SaaS, tableaux de bord, CRM, outils de gestion, plateformes avec backend, base de données et authentification.",tags:['SaaS','Dashboard','CRM','Marketplace'],bg:'linear-gradient(160deg,#FFF7ED,#FFEDD5)',color:'#F97316',border:'rgba(249,115,22,0.2)',top:'#F97316'},
+              {emoji:'💡',title:'Logiciels',desc:'Applications desktop, outils métier, APIs et backends. Code source complet livré avec documentation.',tags:['Desktop','API','Outil métier','Automatisation'],bg:'linear-gradient(160deg,#FDF2F8,#FCE7F3)',color:'#EC4899',border:'rgba(236,72,153,0.2)',top:'#EC4899'},
+            ].map(card=>(
+              <div key={card.title} style={{padding:28,borderRadius:22,background:card.bg,border:'2px solid transparent',cursor:'pointer',transition:'all .3s',borderTopWidth:4,borderTopColor:card.top,borderTopStyle:'solid',borderTopLeftRadius:22,borderTopRightRadius:22}}
+                onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.transform='translateY(-4px)';(e.currentTarget as HTMLDivElement).style.boxShadow=`0 12px 40px ${card.color}25`}}
+                onMouseLeave={e=>{(e.currentTarget as HTMLDivElement).style.transform='translateY(0)';(e.currentTarget as HTMLDivElement).style.boxShadow='none'}}>
+                <div style={{fontSize:42,marginBottom:16}}>{card.emoji}</div>
+                <h3 style={{fontFamily:'Syne,sans-serif',fontSize:20,fontWeight:800,color:card.color,marginBottom:10}}>{card.title}</h3>
+                <p style={{fontSize:13,color:'#4B4566',lineHeight:1.6,marginBottom:16}}>{card.desc}</p>
+                <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                  {card.tags.map(t=>(
+                    <span key={t} style={{padding:'4px 12px',borderRadius:20,fontSize:11,fontWeight:700,background:'rgba(255,255,255,0.65)',color:card.color}}>{t}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── AGENTS ──────────────────────────────────────────────────────── */}
+      <section id="agents" style={S.section('linear-gradient(180deg,#FAFAF8 0%,#F5F3FF 100%)')}>
+        <div style={S.container}>
+          <div style={{textAlign:'center',marginBottom:64}} className="reveal">
+            <div className="badge badge-orange" style={{marginBottom:16}}>✦ 10 Agents IA Spécialisés</div>
+            <h2 style={S.h2}>Une équipe complète d'experts IA<br/><span style={S.grad}>qui travaille pour vous</span></h2>
+            <p style={{fontSize:17,color:'#4B4566',maxWidth:520,margin:'0 auto'}}>Chaque agent est autonome et actif 24h/24. Ensemble, ils couvrent tout le cycle de vie de votre produit.</p>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:14}} className="reveal">
+            {AGENTS.map((agent,i)=>(
+              <div key={agent.id} style={{padding:24,borderRadius:18,background:'#fff',border:`1px solid ${agentColors[i]}20`,boxShadow:'0 2px 12px rgba(124,58,237,0.06)',transition:'all .3s',borderTop:`3px solid ${agentColors[i]}`}}
+                onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.transform='translateY(-3px)';(e.currentTarget as HTMLDivElement).style.boxShadow='0 8px 30px rgba(0,0,0,0.1)'}}
+                onMouseLeave={e=>{(e.currentTarget as HTMLDivElement).style.transform='translateY(0)';(e.currentTarget as HTMLDivElement).style.boxShadow='0 2px 12px rgba(124,58,237,0.06)'}}>
+                <div style={{width:48,height:48,borderRadius:14,background:agentBg[i],display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,marginBottom:14}}>{agent.icon}</div>
+                <h3 style={{fontFamily:'Syne,sans-serif',fontSize:14,fontWeight:700,marginBottom:6,color:'#1A1035'}}>{agent.name}</h3>
+                <p style={{fontSize:12,color:'#4B4566',lineHeight:1.6}}>{agent.desc}</p>
+                <div style={{display:'inline-flex',alignItems:'center',gap:5,marginTop:12,fontSize:11,fontWeight:700,color:'#10B981',background:'#ECFDF5',padding:'3px 10px',borderRadius:8,border:'1px solid rgba(16,185,129,0.2)'}}>
+                  <PulsingDot/>Actif
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
+      <section id="how" style={S.section('#fff')}>
+        <div style={S.container}>
+          <div style={{textAlign:'center',marginBottom:64}} className="reveal">
+            <div className="badge badge-green" style={{marginBottom:16}}>✦ Processus simple</div>
+            <h2 style={S.h2}>De l'idée au produit en <span style={S.grad}>4 étapes</span></h2>
+            <p style={{fontSize:17,color:'#4B4566',maxWidth:500,margin:'0 auto'}}>Nos agents font tout le travail. Vous décrivez, vous choisissez, ils livrent.</p>
+          </div>
+          <div style={{display:'flex',alignItems:'flex-start',position:'relative'}} className="reveal">
+            <div style={{position:'absolute',top:42,left:'12%',right:'12%',height:3,background:'linear-gradient(90deg,#7C3AED,#EC4899,#F97316)',borderRadius:3}}/>
+            {[
+              {n:'1',icon:'💡',title:'Décrivez votre idée',desc:"En français, en détail ou en quelques mots. Nos agents s'adaptent.",color:'#7C3AED'},
+              {n:'2',icon:'🎨',title:'Choisissez un design',desc:'Le Design Agent propose 3 à 6 variantes visuelles uniques.',color:'#EC4899'},
+              {n:'3',icon:'⚡',title:'Les agents génèrent',desc:'10 agents en parallèle : code, tests, sécurité, SEO, documentation.',color:'#F97316'},
+              {n:'4',icon:'🚀',title:'Déployez et lancez',desc:"Téléchargez votre code ou déployez sur votre hébergement. C'est live !",color:'#10B981'},
+            ].map(step=>(
+              <div key={step.n} style={{flex:1,padding:'32px 20px',textAlign:'center',position:'relative'}}>
+                <div style={{width:52,height:52,borderRadius:'50%',background:step.color,color:'#fff',fontFamily:'Syne,sans-serif',fontWeight:800,fontSize:20,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',position:'relative',zIndex:1,boxShadow:`0 4px 16px ${step.color}50`}}>{step.n}</div>
+                <div style={{fontSize:30,marginBottom:12}}>{step.icon}</div>
+                <h3 style={{fontFamily:'Syne,sans-serif',fontSize:16,fontWeight:700,marginBottom:8,color:'#1A1035'}}>{step.title}</h3>
+                <p style={{fontSize:13,color:'#4B4566',lineHeight:1.65}}>{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING ─────────────────────────────────────────────────────── */}
+      <section id="pricing" style={S.section('linear-gradient(180deg,#F5F3FF 0%,#FAFAF8 100%)')}>
+        <div style={S.container}>
+          <div style={{textAlign:'center',marginBottom:64}} className="reveal">
+            <div className="badge badge-pink" style={{marginBottom:16}}>✦ Tarification transparente</div>
+            <h2 style={S.h2}>Un plan pour <span style={S.grad}>chaque besoin</span></h2>
+            <p style={{fontSize:17,color:'#4B4566',maxWidth:500,margin:'0 auto'}}>Paiements en <strong>🪙 DJOLOG (GDL)</strong> uniquement — jeton de l'écosystème DJOLOGBAHA™</p>
           </div>
 
-          {/* Admin notice */}
-          <div className="flex items-start gap-3 p-5 rounded-2xl bg-red-500/5 border border-red-500/15 mb-6 max-w-4xl mx-auto reveal">
-            <span className="text-xl shrink-0">🔒</span>
-            <p className="text-sm text-red-300/80"><strong className="text-red-400">Accès administrateur</strong> — Quel que soit le plan souscrit, l'interface d'administration est strictement réservée aux administrateurs désignés par WELE CREA. Un nom de domaine et un hébergement actifs sont requis avant tout engagement.</p>
-          </div>
-
-          {/* Plans grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 reveal">
-            {PLANS.map(plan => (
-              <div key={plan.id} className={`relative rounded-3xl p-8 border transition-all hover:-translate-y-1 ${plan.featured ? 'bg-[#F5A623]/6 border-[#F5A623]/35 shadow-[0_20px_60px_rgba(245,166,35,0.12)]' : 'bg-white/3 border-white/7'}`}>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:16,maxWidth:1080,margin:'0 auto'}} className="reveal">
+            {PLANS.map(plan=>(
+              <div key={plan.id} style={{
+                borderRadius:24,padding:28,position:'relative',
+                background: plan.featured ? 'linear-gradient(160deg,#7C3AED,#A855F7)' : '#fff',
+                color: plan.featured ? '#fff' : '#1A1035',
+                border: plan.featured ? 'none' : '2px solid rgba(124,58,237,0.12)',
+                boxShadow: plan.featured ? '0 16px 56px rgba(124,58,237,0.4)' : '0 4px 20px rgba(0,0,0,0.06)',
+                transform: plan.featured ? 'scale(1.04)' : 'scale(1)',
+                transition:'all .3s',
+              }}
+                onMouseEnter={e=>{if(!plan.featured)(e.currentTarget as HTMLDivElement).style.transform='translateY(-4px)'}}
+                onMouseLeave={e=>{if(!plan.featured)(e.currentTarget as HTMLDivElement).style.transform='scale(1)'}}>
                 {plan.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#F5A623] text-[#070B16] text-[11px] font-extrabold whitespace-nowrap">
-                    {plan.badge}
+                  <div style={{position:'absolute',top:-14,left:'50%',transform:'translateX(-50%)',padding:'5px 18px',borderRadius:20,background:'linear-gradient(135deg,#F97316,#EC4899)',color:'#fff',fontSize:11,fontWeight:800,whiteSpace:'nowrap',boxShadow:'0 4px 12px rgba(249,115,22,0.4)'}}>
+                    🔥 {plan.badge}
                   </div>
                 )}
-                <h3 className={`text-xl font-extrabold mb-1 ${plan.featured ? 'gradient-gold' : ''}`} style={{ fontFamily: 'Syne', marginTop: plan.badge ? 12 : 0 }}>{plan.name}</h3>
-                <p className="text-xs text-white/40 mb-6">{plan.sub}</p>
-
-                <div className="mb-6">
-                  {plan.priceGDL === 0 ? (
-                    <span className="text-3xl font-extrabold text-[#00E5A0]" style={{ fontFamily: 'Syne' }}>Gratuit</span>
-                  ) : (
+                <div style={{fontFamily:'Syne,sans-serif',fontSize:20,fontWeight:800,marginBottom:4,marginTop:plan.badge?12:0}}>{plan.name}</div>
+                <div style={{fontSize:13,opacity:.65,marginBottom:20}}>{plan.sub}</div>
+                <div style={{marginBottom:22}}>
+                  {plan.priceGDL===0 ? (
+                    <div style={{fontFamily:'Syne,sans-serif',fontSize:36,fontWeight:800,color:plan.featured?'#fff':'#10B981'}}>Gratuit</div>
+                  ):(
                     <>
-                      <span className="text-3xl font-extrabold text-[#F5A623]" style={{ fontFamily: 'Syne' }}>{plan.priceGDL}</span>
-                      <span className="text-sm text-white/40 ml-1">GDL / mois</span>
-                      <div className="text-xs text-white/30 mt-1">≈ {plan.priceUSD} USD / mois</div>
+                      <span style={{fontFamily:'Syne,sans-serif',fontSize:36,fontWeight:800}}>{plan.priceGDL}</span>
+                      <span style={{fontSize:14,opacity:.65,marginLeft:4}}>GDL / mois</span>
+                      <div style={{fontSize:13,opacity:.55,marginTop:2}}>≈ {plan.priceUSD} USD / mois</div>
                     </>
                   )}
                 </div>
-
-                <ul className="space-y-2 mb-8">
-                  {plan.features.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-[13px] text-white/60">
-                      <span className="text-[#00E5A0] mt-0.5 shrink-0">✓</span> {f}
-                    </li>
-                  ))}
-                  {plan.locked.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-[13px] text-white/20 line-through">
-                      <span className="shrink-0">✗</span> {f}
+                <ul style={{listStyle:'none',marginBottom:24}}>
+                  {plan.features.map(f=>(
+                    <li key={f} style={{display:'flex',alignItems:'flex-start',gap:8,fontSize:13,padding:'5px 0',borderBottom:`1px solid ${plan.featured?'rgba(255,255,255,0.12)':'rgba(124,58,237,0.06)'}`,opacity:.9}}>
+                      <span style={{color:plan.featured?'#A7F3D0':'#10B981',flexShrink:0}}>✓</span>{f}
                     </li>
                   ))}
                 </ul>
-
-                {plan.priceGDL === 0 ? (
-                  <Link href="/signup" className={`block w-full text-center py-3 rounded-xl text-sm font-bold border border-white/15 hover:border-[#F5A623] hover:text-[#F5A623] transition-all`}>
-                    {plan.cta}
+                {plan.priceGDL===0 ? (
+                  <Link href="/signup" style={{display:'block',width:'100%',padding:'13px',borderRadius:14,fontSize:14,fontWeight:700,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',textAlign:'center',background:'transparent',color:plan.featured?'#fff':'#7C3AED',border:`2px solid ${plan.featured?'rgba(255,255,255,0.4)':'rgba(124,58,237,0.25)'}`,textDecoration:'none',transition:'all .2s'}}>
+                    Commencer gratuitement
                   </Link>
-                ) : (
-                  <button
-                    onClick={() => { navigator.clipboard.writeText(GDL.wallet); alert('Adresse GDL copiée ! Envoyez ' + plan.priceGDL + ' GDL pour activer le plan ' + plan.name + '.') }}
-                    className={`w-full py-3 rounded-xl text-sm font-bold transition-all ${plan.featured ? 'bg-gradient-to-r from-[#F5A623] to-[#E8920A] text-[#070B16] hover:shadow-[0_0_20px_rgba(245,166,35,0.3)]' : 'border border-white/15 hover:border-[#F5A623] hover:text-[#F5A623]'}`}
-                  >
-                    🪙 {plan.cta}
+                ):(
+                  <button onClick={handleCopy}
+                    style={{width:'100%',padding:'13px',borderRadius:14,fontSize:14,fontWeight:700,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',background:plan.featured?'#fff':'transparent',color:plan.featured?'#7C3AED':'#7C3AED',border:`2px solid ${plan.featured?'transparent':'rgba(124,58,237,0.25)'}`,transition:'all .2s'}}>
+                    🪙 Payer en GDL
                   </button>
                 )}
               </div>
             ))}
           </div>
 
-          {/* GDL Wallet info */}
-          <div className="flex flex-wrap items-center gap-4 p-6 rounded-2xl bg-[#F5A623]/5 border border-[#F5A623]/20 max-w-4xl mx-auto reveal">
-            <span className="text-3xl">🪙</span>
-            <div className="flex-1 min-w-[200px]">
-              <h4 className="text-sm font-bold text-[#F5A623] mb-1">Paiement DJOLOG (GDL) uniquement · BEP-20</h4>
-              <p className="text-xs text-white/40 mb-2">Envoyez vos GDL à cette adresse sur le réseau BNB Smart Chain :</p>
-              <code className="block text-xs font-mono text-white bg-black/30 px-3 py-2 rounded-lg break-all">{GDL.wallet}</code>
+          {/* Wallet GDL */}
+          <div style={{maxWidth:760,margin:'32px auto 0',padding:'24px 28px',borderRadius:18,background:'linear-gradient(135deg,#FFF7ED,#FFF3E0)',border:'2px solid rgba(249,115,22,0.25)',display:'flex',alignItems:'center',gap:16,flexWrap:'wrap'}} className="reveal">
+            <div style={{fontSize:32}}>🪙</div>
+            <div style={{flex:1,minWidth:200}}>
+              <div style={{fontWeight:700,color:'#F97316',fontSize:14,marginBottom:4}}>Adresse de paiement GDL officielle · BNB Smart Chain (BEP-20)</div>
+              <div style={{fontSize:13,color:'#92400E',marginBottom:8}}>Envoyez vos GDL à cette adresse pour activer votre plan.</div>
+              <code style={{fontFamily:'JetBrains Mono,monospace',fontSize:12,background:'rgba(249,115,22,0.1)',color:'#F97316',padding:'8px 14px',borderRadius:10,display:'block',wordBreak:'break-all',border:'1px solid rgba(249,115,22,0.2)'}}>{GDL.wallet}</code>
             </div>
-            <button
-              onClick={handleCopy}
-              className="px-4 py-2.5 rounded-xl text-sm font-semibold border border-[#F5A623]/30 text-[#F5A623] hover:bg-[#F5A623]/10 transition-all shrink-0"
-            >
-              {copied ? '✅ Copié !' : '📋 Copier'}
+            <button onClick={handleCopy}
+              style={{padding:'10px 18px',borderRadius:12,border:'2px solid rgba(249,115,22,0.3)',background:'#fff',color:'#F97316',fontWeight:700,fontSize:13,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',whiteSpace:'nowrap'}}>
+              {copied?'✅ Copié !':'📋 Copier'}
             </button>
           </div>
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────── */}
-      <section className="py-24 bg-[#0C1120] relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-radial-gradient pointer-events-none" style={{ background: 'radial-gradient(ellipse, rgba(245,166,35,0.1), transparent 70%)' }} />
-        <div className="max-w-2xl mx-auto text-center px-6 relative z-10 reveal">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5A623]/10 border border-[#F5A623]/30 text-xs font-bold text-[#F5A623] uppercase tracking-widest mb-6 mx-auto">✦ Rejoignez l'aventure</div>
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ fontFamily: 'Syne' }}>
-            Prêt à créer votre <span className="gradient-gold">premier projet ?</span>
-          </h2>
-          <p className="text-white/50 mb-10 text-lg">De l'idée au produit digital en moins de 2 minutes. Commencez gratuitement.</p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href="/signup" className="px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-[#F5A623] to-[#E8920A] text-[#070B16] hover:shadow-[0_0_30px_rgba(245,166,35,0.35)] hover:-translate-y-0.5 transition-all">
+      {/* ── CTA ─────────────────────────────────────────────────────────── */}
+      <section style={{padding:'100px 32px',background:'linear-gradient(135deg,#7C3AED 0%,#EC4899 50%,#F97316 100%)',textAlign:'center',position:'relative',overflow:'hidden'}}>
+        <div className="dot-grid" style={{position:'absolute',inset:0,opacity:.15,pointerEvents:'none'}}/>
+        <div style={{position:'relative',zIndex:1,maxWidth:640,margin:'0 auto'}} className="reveal">
+          <div style={{display:'inline-flex',alignItems:'center',gap:6,padding:'6px 16px',borderRadius:20,background:'rgba(255,255,255,0.15)',fontSize:12,fontWeight:700,color:'#fff',marginBottom:24}}>✦ Rejoignez l'aventure</div>
+          <h2 style={{fontFamily:'Syne,sans-serif',fontSize:'clamp(32px,5vw,54px)',fontWeight:800,color:'#fff',marginBottom:16}}>Prêt à créer votre premier produit digital ?</h2>
+          <p style={{color:'rgba(255,255,255,0.8)',fontSize:18,marginBottom:36}}>De l'idée au produit en moins de 2 minutes. Commencez gratuitement.</p>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:14,flexWrap:'wrap'}}>
+            <Link href="/signup" style={{padding:'15px 32px',borderRadius:14,background:'#fff',color:'#7C3AED',fontWeight:800,fontSize:16,textDecoration:'none',boxShadow:'0 6px 24px rgba(0,0,0,0.2)',transition:'all .2s',display:'inline-flex',alignItems:'center',gap:8}}>
               ⚡ Commencer gratuitement
             </Link>
-            <Link href="/login" className="px-8 py-4 rounded-xl font-bold border border-white/15 hover:border-[#F5A623]/40 hover:text-[#F5A623] transition-all">
+            <Link href="/login" style={{padding:'14px 28px',borderRadius:14,border:'2px solid rgba(255,255,255,0.4)',background:'transparent',color:'#fff',fontWeight:700,fontSize:15,textDecoration:'none',transition:'all .2s'}}>
               Se connecter
             </Link>
           </div>

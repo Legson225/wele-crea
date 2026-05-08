@@ -6,23 +6,27 @@ interface MetricCardProps {
   accent?: 'gold' | 'cyan' | 'pink' | 'emerald'
 }
 
-const accents = {
-  gold: 'linear-gradient(135deg,#F5A623,#FFCD6B)',
-  cyan: 'linear-gradient(135deg,#00D4FF,#00E5A0)',
-  pink: 'linear-gradient(135deg,#FF6B9D,#FF9EC4)',
-  emerald: 'linear-gradient(135deg,#00E5A0,#00D4FF)',
+const colors = {
+  gold:    '#F97316',
+  cyan:    '#06B6D4',
+  pink:    '#EC4899',
+  emerald: '#10B981',
+}
+const bgs = {
+  gold:    '#FFF7ED',
+  cyan:    '#ECFEFF',
+  pink:    '#FDF2F8',
+  emerald: '#ECFDF5',
 }
 
 export default function MetricCard({ label, value, change, changeType = 'neutral', accent = 'gold' }: MetricCardProps) {
   return (
-    <div className="p-5 rounded-2xl bg-white/3 border border-white/7">
-      <p className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-2">{label}</p>
-      <p className="text-2xl font-extrabold leading-none mb-1" style={{ fontFamily: 'Syne', background: accents[accent], WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-        {value}
-      </p>
+    <div style={{padding:20,borderRadius:18,background:'#fff',border:'1px solid rgba(124,58,237,0.1)',boxShadow:'0 2px 12px rgba(124,58,237,0.06)'}}>
+      <p style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:8}}>{label}</p>
+      <p style={{fontFamily:'Syne,sans-serif',fontSize:26,fontWeight:800,color:colors[accent],lineHeight:1,marginBottom:4}}>{value}</p>
       {change && (
-        <p className={`text-xs flex items-center gap-1 ${changeType === 'up' ? 'text-[#00E5A0]' : changeType === 'down' ? 'text-red-400' : 'text-white/30'}`}>
-          {changeType === 'up' && '↑'}{changeType === 'down' && '↓'} {change}
+        <p style={{fontSize:12,color:changeType==='up'?'#10B981':changeType==='down'?'#EF4444':'#9CA3AF',display:'flex',alignItems:'center',gap:4}}>
+          {changeType==='up'&&'↑'}{changeType==='down'&&'↓'} {change}
         </p>
       )}
     </div>

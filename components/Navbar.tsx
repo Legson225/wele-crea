@@ -13,67 +13,50 @@ export default function Navbar() {
   }, [])
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#070B16]/85 backdrop-blur-xl border-b border-white/7' : ''}`}>
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#F5A623] to-[#E8920A] flex items-center justify-center font-bold text-[#070B16] shadow-[0_0_20px_rgba(245,166,35,0.3)]" style={{ fontFamily: 'Syne, sans-serif', fontSize: 18 }}>W</div>
-          <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 19 }}>
-            WELE <span style={{ color: '#F5A623' }}>CREA</span>
-          </span>
+    <nav style={{
+      position:'fixed',top:0,left:0,right:0,zIndex:100,
+      background: scrolled ? 'rgba(255,255,255,0.95)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(20px)' : 'none',
+      borderBottom: scrolled ? '1px solid rgba(124,58,237,0.1)' : 'none',
+      transition:'all .3s',padding:'14px 0'
+    }}>
+      <div style={{maxWidth:1280,margin:'0 auto',padding:'0 32px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <Link href="/" style={{display:'flex',alignItems:'center',gap:10,textDecoration:'none'}}>
+          <div style={{width:38,height:38,borderRadius:12,background:'linear-gradient(135deg,#7C3AED,#EC4899)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne,sans-serif',fontWeight:800,fontSize:18,color:'#fff',boxShadow:'0 4px 14px rgba(124,58,237,0.4)'}}>W</div>
+          <span style={{fontFamily:'Syne,sans-serif',fontWeight:800,fontSize:19,color:'#1A1035'}}>WELE <span style={{color:'#7C3AED'}}>CREA</span></span>
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div style={{display:'flex',alignItems:'center',gap:28}} className="hidden md:flex">
           {[
-            { href: '/#agents', label: 'Agents IA' },
-            { href: '/#how', label: 'Fonctionnement' },
-            { href: '/#pricing', label: 'Tarifs' },
-            { href: '/faq', label: 'FAQ' },
+            {href:'/#types',label:"Ce qu'on crée"},
+            {href:'/#agents',label:'Agents IA'},
+            {href:'/#how',label:'Fonctionnement'},
+            {href:'/#pricing',label:'Tarifs'},
+            {href:'/faq',label:'FAQ'},
           ].map(l => (
-            <Link key={l.href} href={l.href} className="text-sm text-white/50 hover:text-white transition-colors">
+            <Link key={l.href} href={l.href} style={{fontSize:14,fontWeight:500,color:'#4B4566',textDecoration:'none',transition:'color .2s'}}
+              onMouseEnter={e=>(e.currentTarget.style.color='#7C3AED')}
+              onMouseLeave={e=>(e.currentTarget.style.color='#4B4566')}>
               {l.label}
             </Link>
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="hidden md:flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00E5A0]/10 border border-[#00E5A0]/25 text-[11px] font-bold text-[#00E5A0]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00E5A0] animate-pulse-dot" />
-            10 Agents Actifs
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{display:'flex',alignItems:'center',gap:5,padding:'4px 12px',borderRadius:20,background:'#ECFDF5',border:'1px solid rgba(16,185,129,0.25)',fontSize:11,fontWeight:700,color:'#10B981'}}>
+            <span style={{width:6,height:6,borderRadius:'50%',background:'#10B981',display:'inline-block'}} className="animate-pulse-dot"/>
+            10 Agents actifs
           </div>
-          <Link href="/login" className="px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white border border-white/10 hover:border-white/20 transition-all">
+          <Link href="/login" style={{padding:'9px 18px',borderRadius:12,border:'2px solid rgba(124,58,237,0.2)',background:'#fff',color:'#7C3AED',fontWeight:700,fontSize:13,textDecoration:'none',transition:'all .2s'}}
+            onMouseEnter={e=>{e.currentTarget.style.background='#EDE9FE'}}
+            onMouseLeave={e=>{e.currentTarget.style.background='#fff'}}>
             Se connecter
           </Link>
-          <Link href="/signup" className="px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-[#F5A623] to-[#E8920A] text-[#070B16] hover:shadow-[0_0_20px_rgba(245,166,35,0.3)] transition-all hover:-translate-y-0.5">
-            ⚡ Démarrer
+          <Link href="/signup" style={{padding:'9px 18px',borderRadius:12,background:'linear-gradient(135deg,#7C3AED,#A855F7)',color:'#fff',fontWeight:700,fontSize:13,textDecoration:'none',boxShadow:'0 4px 14px rgba(124,58,237,0.35)',transition:'all .2s'}}>
+            ⚡ Commencer
           </Link>
         </div>
-
-        {/* Mobile toggle */}
-        <button className="md:hidden text-white/70" onClick={() => setMenuOpen(!menuOpen)}>
-          <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2}><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="12" x2="19" y2="12"/><line x1="3" y1="18" x2="19" y2="18"/></svg>
-        </button>
       </div>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-[#0C1120] border-t border-white/7 px-6 py-6 flex flex-col gap-4">
-          {[
-            { href: '/#agents', label: 'Agents IA' },
-            { href: '/#how', label: 'Fonctionnement' },
-            { href: '/#pricing', label: 'Tarifs' },
-            { href: '/faq', label: 'FAQ' },
-          ].map(l => (
-            <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="text-sm text-white/60 hover:text-white">{l.label}</Link>
-          ))}
-          <div className="flex gap-3 pt-2">
-            <Link href="/login" onClick={() => setMenuOpen(false)} className="flex-1 text-center py-2.5 rounded-xl text-sm border border-white/10 hover:border-white/20">Se connecter</Link>
-            <Link href="/signup" onClick={() => setMenuOpen(false)} className="flex-1 text-center py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-[#F5A623] to-[#E8920A] text-[#070B16]">⚡ Démarrer</Link>
-          </div>
-        </div>
-      )}
     </nav>
   )
 }

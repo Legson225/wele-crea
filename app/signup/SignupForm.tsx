@@ -108,7 +108,7 @@ export default function SignupForm() {
                 {field('Confirmer le mot de passe', 'confirmPassword', 'password', '••••••••')}
                 <label className="flex items-start gap-3 cursor-pointer pt-1">
                   <input type="checkbox" checked={form.terms} onChange={e => setForm(f => ({ ...f, terms: e.target.checked }))} className="w-4 h-4 mt-0.5 accent-[#F5A623] shrink-0" />
-                  <span className="text-xs text-white/50">J'accepte les <Link href="#" className="text-[#F5A623] hover:underline">conditions d'utilisation</Link> et la <Link href="#" className="text-[#F5A623] hover:underline">politique de confidentialité</Link></span>
+                  <span className="text-xs text-white/50">J'accepte les <Link href="/terms" className="text-[#F5A623] hover:underline">conditions d'utilisation</Link> et la <Link href="/privacy" className="text-[#F5A623] hover:underline">politique de confidentialité</Link></span>
                 </label>
                 {errors.terms && <p className="text-xs text-red-400">{errors.terms}</p>}
                 <button type="submit" className="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#F5A623] to-[#E8920A] text-[#070B16] hover:shadow-[0_0_24px_rgba(245,166,35,0.3)] transition-all mt-2">Continuer →</button>

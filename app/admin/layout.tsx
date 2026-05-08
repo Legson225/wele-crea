@@ -1,34 +1,57 @@
-import Sidebar from '@/components/dashboard/Sidebar'
+'use client'
+import Link from 'next/link'
 
 const links = [
-  { href: '/admin',             icon: '📊', label: "Vue d'ensemble" },
-  { href: '/admin/users',       icon: '👥', label: 'Utilisateurs', badge: 0 },
-  { href: '/admin/projects',    icon: '📁', label: 'Tous les projets' },
-  { href: '/admin/agents',      icon: '🤖', label: 'Agents IA Globaux' },
-  { href: '/admin/revenue',     icon: '💰', label: 'Revenus GDL' },
-  { href: '/admin/security',    icon: '🛡️', label: 'Sécurité' },
-  { href: '/admin/settings',    icon: '⚙️', label: 'Config Plateforme' },
+  {href:'/admin',icon:'📊',label:"Vue d'ensemble"},
+  {href:'/admin/users',icon:'👥',label:'Utilisateurs'},
+  {href:'/admin/projects',icon:'📁',label:'Tous les projets'},
+  {href:'/admin/agents',icon:'🤖',label:'Agents IA Globaux'},
+  {href:'/admin/revenue',icon:'💰',label:'Revenus GDL'},
+  {href:'/admin/security',icon:'🛡️',label:'Sécurité'},
+  {href:'/admin/settings',icon:'⚙️',label:'Config Plateforme'},
 ]
 
-const user = { name: 'Super Admin', plan: 'Niveau 5 · Root', initials: '🔐' }
-
-const adminBanner = (
-  <div className="mx-3 my-2 p-3 rounded-xl bg-red-500/8 border border-red-500/20 text-center">
-    <p className="text-[11px] font-bold text-red-400">🔐 BACK-OFFICE ADMIN</p>
-    <p className="text-[10px] text-red-400/60 mt-0.5">Accès restreint</p>
-  </div>
-)
-
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({children}:{children:React.ReactNode}) {
   return (
-    <div className="flex min-h-screen bg-[#070B16]">
-      <Sidebar links={links} user={user} isAdmin extraTop={adminBanner} />
-      <main className="ml-64 flex-1 min-h-screen">
-        {/* Admin top banner */}
-        <div className="bg-red-500/5 border-b border-red-500/15 px-8 py-2.5 flex items-center justify-center gap-2">
-          <span className="text-[12px] font-bold text-red-400">🔐 Interface Administrateur — Accès restreint · WELE CREA Back-Office</span>
+    <div style={{display:'flex',minHeight:'100vh',background:'#FFF8F5'}}>
+      {/* Admin top banner */}
+      <div style={{position:'fixed',top:0,left:0,right:0,zIndex:200,background:'linear-gradient(135deg,#DC2626,#EF4444)',padding:'8px 20px',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+        <span style={{fontSize:12,fontWeight:700,color:'#fff'}}>🔐 Interface Administrateur — Accès restreint · WELE CREA Back-Office</span>
+      </div>
+
+      <aside style={{width:256,flexShrink:0,background:'#fff',borderRight:'1px solid rgba(239,68,68,0.1)',paddingTop:52,paddingBottom:0,display:'flex',flexDirection:'column',position:'fixed',top:0,left:0,bottom:0,zIndex:100,overflowY:'auto',boxShadow:'2px 0 12px rgba(239,68,68,0.06)'}}>
+        <div style={{padding:'16px 20px 16px',borderBottom:'1px solid rgba(239,68,68,0.1)',marginBottom:12}}>
+          <Link href="/" style={{display:'flex',alignItems:'center',gap:8,textDecoration:'none'}}>
+            <div style={{width:32,height:32,borderRadius:9,background:'linear-gradient(135deg,#DC2626,#EF4444)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Syne',fontWeight:800,fontSize:15,color:'#fff'}}>A</div>
+            <span style={{fontFamily:'Syne,sans-serif',fontWeight:800,fontSize:15,color:'#1A1035'}}>WELE <span style={{color:'#DC2626'}}>ADMIN</span></span>
+          </Link>
         </div>
-        <div className="p-8">{children}</div>
+        <nav style={{flex:1,padding:'0 12px'}}>
+          {links.map(l=>(
+            <Link key={l.href} href={l.href} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:12,fontSize:14,color:'#4B4566',textDecoration:'none',transition:'all .2s',marginBottom:2,fontWeight:500,border:'1px solid transparent'}}
+              onMouseEnter={e=>{e.currentTarget.style.color='#DC2626';e.currentTarget.style.background='#FEF2F2'}}
+              onMouseLeave={e=>{e.currentTarget.style.color='#4B4566';e.currentTarget.style.background='transparent'}}>
+              <span style={{fontSize:16,width:20,textAlign:'center'}}>{l.icon}</span>{l.label}
+            </Link>
+          ))}
+        </nav>
+        <div style={{padding:'16px 12px',borderTop:'1px solid rgba(239,68,68,0.08)'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:12,background:'#FEF2F2',border:'1px solid rgba(239,68,68,0.15)'}}>
+            <div style={{width:32,height:32,borderRadius:9,background:'linear-gradient(135deg,#DC2626,#EF4444)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,color:'#fff'}}>🔐</div>
+            <div>
+              <div style={{fontSize:13,fontWeight:600,color:'#1A1035'}}>Super Admin</div>
+              <div style={{fontSize:11,color:'#DC2626',fontWeight:600}}>Niveau 5 · Root</div>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:8,marginTop:8}}>
+            <Link href="/dashboard" style={{flex:1,textAlign:'center',padding:'7px',borderRadius:10,fontSize:11,border:'1px solid rgba(124,58,237,0.2)',color:'#7C3AED',textDecoration:'none',fontWeight:600}}>Dashboard</Link>
+            <Link href="/" style={{flex:1,textAlign:'center',padding:'7px',borderRadius:10,fontSize:11,border:'1px solid rgba(0,0,0,0.1)',color:'#4B4566',textDecoration:'none',fontWeight:600}}>← Site</Link>
+          </div>
+        </div>
+      </aside>
+
+      <main style={{marginLeft:256,flex:1,minHeight:'100vh',paddingTop:44}}>
+        <div style={{padding:32}}>{children}</div>
       </main>
     </div>
   )
