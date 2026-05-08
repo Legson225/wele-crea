@@ -1,7 +1,7 @@
 'use client'
 import MetricCard from '@/components/dashboard/MetricCard'
 import Link from 'next/link'
-export const metadata = { title: 'Administration WELE CREA' }
+
 
 export default function AdminPage() {
   return (
