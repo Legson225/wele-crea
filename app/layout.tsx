@@ -3,18 +3,26 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: { default: 'WELE CREA — Fabrique IA de Produits Digitaux', template: '%s | WELE CREA' },
-  description: 'Transformez n\'importe quelle idée en site web, application ou logiciel complet grâce à 10 Agents IA autonomes. Zéro code. Paiement en GDL.',
+  description: "Transformez n'importe quelle idée en site web, application ou logiciel complet grâce à 10 Agents IA autonomes. Zéro code. Paiement en GDL.",
   keywords: ['IA', 'création site web', 'no-code', 'agents IA', 'DJOLOG', 'GDL', 'DJOLOGBAHA'],
   authors: [{ name: 'DJOLOGBAHA™' }],
+  other: {
+    // ── Google AdSense — Validation de propriété ──────────────────────
+    'google-adsense-account': 'ca-pub-2672251536807949',
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
     url: 'https://wele-crea.com',
     title: 'WELE CREA — Fabrique IA de Produits Digitaux',
-    description: 'De l\'idée au produit digital en 2 minutes. 10 Agents IA autonomes. Paiement GDL.',
+    description: "De l'idée au produit digital en 2 minutes. 10 Agents IA autonomes. Paiement GDL.",
     siteName: 'WELE CREA',
   },
-  twitter: { card: 'summary_large_image', title: 'WELE CREA', description: 'Fabrique IA de produits digitaux — Paiement GDL' },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'WELE CREA',
+    description: 'Fabrique IA de produits digitaux — Paiement GDL',
+  },
   robots: { index: true, follow: true },
 }
 
@@ -22,9 +30,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        {/* ── Google Fonts ──────────────────────────────────────────── */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+        {/* ── Google AdSense — Validation de propriété ─────────────── */}
+        <meta name="google-adsense-account" content="ca-pub-2672251536807949" />
+
+        {/* ── Google AdSense — Script principal (activé en production) ─ */}
+        {process.env.NODE_ENV === 'production' && (
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2672251536807949"
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body className="antialiased">{children}</body>
     </html>
